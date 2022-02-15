@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:student_portal/screens/login/loginPage.dart';
@@ -24,11 +25,7 @@ class _SignupPageState extends State<SignupPage> {
 
   final _auth = FirebaseAuth.instance;
 
-  void _submitForm(
-    String email,
-    String password,
-    String Sap,
-  ) async {
+  void _submitForm(String email, String password, String sap) async {
     setState(() {
       showSpinner = true;
     });
@@ -36,6 +33,10 @@ class _SignupPageState extends State<SignupPage> {
       print("In try block");
       await _auth.createUserWithEmailAndPassword(
           email: email, password: password);
+      FirebaseFirestore.instance.collection('/Userdetails/').add({
+        'sapid': _userSAP,
+        'email': email,
+      });
       Navigator.of(context).pushReplacementNamed(LoginPage.routeName);
       setState(() {
         showSpinner = false;
